@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Rubis Energy Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+    <style>
+      body {
+        background: #f5f5f5;
+        font-family: 'Segoe UI', sans-serif;
+      }
+      .login-card {
+        max-width: 400px;
+        margin: auto;
+        padding: 2rem;
+        border-radius: 12px;
+        background-color: white;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      }
+      .rubis-logo {
+        width: 120px;
+        margin-bottom: 1rem;
+      }
+      .rubis-btn {
+        background-color: #007A33;
+        border: none;
+      }
+      .rubis-btn:hover {
+        background-color: #005a26;
+      }
+      .rubis-title {
+        color: #007A33;
+        font-weight: 600;
+        margin-bottom: 1rem;
+      }
+      .alert {
+        font-size: 0.85rem;
+        padding: 0.4rem 0.75rem;
+      }
+    </style>
+  </head>
+  <body class="d-flex justify-content-center align-items-center vh-100">
+
+    <div class="login-card text-center">
+      <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Rubis Logo" class="rubis-logo">
+
+      <h6 class="rubis-title">Retail Development Map</h6>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, msg in messages %}
+            <div class="alert alert-{{ category }}">{{ msg }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <form method="post" action="{{ url_for('auth.login', next=request.args.get('next')) }}">
+        <div class="mb-3 text-start">
+          <label for="username" class="form-label">Username</label>
+          <input type="text" name="username" id="username" class="form-control" required autofocus>
+        </div>
+        <div class="mb-4 text-start">
+            <label for="password" class="form-label">Password</label>
+            <div class="input-group">
+                <input type="password" name="password" id="password" class="form-control" required>
+                <span class="input-group-text" onclick="togglePassword()" style="cursor: pointer;">
+                <i class="bi bi-eye" id="eyeIcon"></i>
+                </span>
+            </div>
+        </div>
+
+        <button type="submit" class="btn rubis-btn text-white w-100">Sign In</button>
+      </form>
+    </div>
+
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById("password");
+            const eyeIcon = document.getElementById("eyeIcon");
+            const isPassword = passwordInput.type === "password";
+            passwordInput.type = isPassword ? "text" : "password";
+
+            eyeIcon.innerHTML = isPassword
+            ? `<path d="M13.359 11.238l1.342 1.342a.5.5 0 0 1-.707.707l-1.342-1.342a8.356 8.356 0 0 1-4.652 1.365c-3.278 0-6.033-1.86-7.358-4.41a.5.5 0 0 1 0-.422A8.003 8.003 0 0 1 5.6 3.343L4.258 2a.5.5 0 1 1 .707-.707l11 11a.5.5 0 0 1-.707.707l-1.342-1.342zm-1.442-1.442L9.084 7.964a2 2 0 0 0-2.12-2.12L4.845 3.725a7.003 7.003 0 0 0-3.084 4.275 7.003 7.003 0 0 0 11.156 2.796z"/>`
+            : `<path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8z"/><path d="M8 5a3 3 0 1 1 0 6 3 3 0 0 1 0-6z"/>`;
+        }
+    </script>
+
+
+  </body>
+</html>

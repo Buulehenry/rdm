@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Map Test</title>
+
+    <!-- Leaflet CSS -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+      integrity="sha384-eNcdTc1txV0e1jFQJlTVzoVWEpv7fSz3gCjEO0YzYY7vU7A+v7pJtFWZc+Ox1dC8"
+      crossorigin=""
+    />
+
+    <style>
+      html, body, #map {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+<script src="/static/js/main.js"></script>
+
+  <body>
+    <div id="map"></div>
+
+    <!-- Leaflet JS -->
+    <script
+      src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+      integrity="sha384-uQ4QeWH6J2vW+N6o52+p4uw2T9l5yA6nHzFFz7+q2Bz0MxUOqQM9bW+Cip2Jg+5C"
+      crossorigin=""
+    ></script>
+
+    <!-- Minimal inline JS to test -->
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const map = L.map('map').setView([0, 32], 6);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+      });
+    </script>
+  </body>
+</html>

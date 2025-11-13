@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+{% block title %}Map Dashboard{% endblock %}
+
+{% block content %}
+<noscript>
+  <div class="alert alert-warning m-2">
+    JavaScript is required to view the interactive map.
+  </div>
+</noscript>
+
+<!-- Map container -->
+<div id="map" class="h-100 w-100"></div>
+
+<!-- Add / Edit Station Modal -->
+<div class="modal fade" id="addStationModal" tabindex="-1"
+     aria-labelledby="addStationModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content">
+
+      <form id="add-station-form" autocomplete="off">
+        <div class="modal-header py-2">
+          <h6 class="modal-title mb-0" id="addStationModalLabel">Add Station</h6>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"
+                  aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body py-2">
+
+          <!-- Name -->
+          <div class="mb-2">
+            <label class="form-label mb-0 small" for="station-name">Name</label>
+            <input class="form-control form-control-sm" id="station-name"
+                   name="name" maxlength="128" required>
+          </div>
+
+            <!-- Category -->
+          <div class="mb-2">
+            <label class="form-label mb-0 small" for="station-category">Type / Category</label>
+            <select class="form-select form-select-sm" id="station-category"
+                    name="category" required>
+              <option value="rubis" selected>Rubis Station</option>
+              <option value="competitor">Competitor Station</option>
+              <option value="target">Target Station</option>
+            </select>
+          </div>
+
+          <!-- Competitor (only if category = competitor) -->
+          <div class="mb-2 d-none" id="competitor-select-wrap">
+            <label class="form-label mb-0 small" for="competitor-select">Competitor</label>
+            <select class="form-select form-select-sm" id="competitor-select"
+                    name="competitor_id">
+              <!-- dynamically filled -->
+            </select>
+          </div>
+
+          <!-- Pin customization -->
+          <div class="row g-2 mb-2">
+            <div class="col-6">
+              <label class="form-label mb-0 small" for="pin-shape">Pin Shape</label>
+              <select class="form-select form-select-sm" id="pin-shape" name="pin_shape">
+                <option value="marker">Marker</option>
+                <option value="circle">Circle</option>
+                <option value="square">Square</option>
+                <option value="triangle">Triangle</option>
+                <option value="rubis_pin">Rubis</option>
+                <option value="shell_pin">Shell</option>
+                <option value="total_pin">TotalEnergies</option>
+              </select>
+            </div>
+            <div class="col-6">
+              <label class="form-label mb-0 small" for="pin-color">Pin Color</label>
+              <input type="color" class="form-control form-control-color
+                     form-control-sm p-0" id="pin-color" name="pin_color"
+                     value="#2E7D32" title="Choose pin color">
+            </div>
+          </div>
+
+          <!-- Region & District -->
+          <div class="row g-2 mb-2">
+            <div class="col-6">
+              <label class="form-label mb-0 small" for="station-region">Region</label>
+              <select class="form-select form-select-sm" id="station-region" name="region">
+                <option value="">— Select region —</option>
+                <option value="Kampala Central">Kampala Central</option>
+                <option value="Kampala Western">Kampala Western</option>
+                <option value="Northern">Northern</option>
+                <option value="Western">Western</option>
+                <option value="Eastern">Eastern</option>
+                <option value="South Western">South Western</option>
+              </select>
+            </div>
+            <div class="col-6">
+              <label class="form-label mb-0 small" for="station-district">District</label>
+              <select class="form-select form-select-sm" id="station-district" name="district" disabled>
+                <option value="">— Select district —</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Coordinates -->
+          <div class="mb-2">
+            <label class="form-label mb-0 small d-block">Coordinates</label>
+
+            <!-- Mode selector -->
+            <div class="btn-group btn-group-sm mb-2 w-100" role="group" id="coord-mode-group">
+              <input type="radio" class="btn-check" name="coord_mode" id="coord_mode_map" value="map" autocomplete="off" checked>
+              <label class="btn btn-outline-secondary" for="coord_mode_map">Pick Map</label>
+
+              <input type="radio" class="btn-check" name="coord_mode" id="coord_mode_manual" value="manual" autocomplete="off">
+              <label class="btn btn-outline-secondary" for="coord_mode_manual">Manual</label>
+
+              <input type="radio" class="btn-check" name="coord_mode" id="coord_mode_geo" value="geo" autocomplete="off">
+              <label class="btn btn-outline-secondary" for="coord_mode_geo">My Location</label>
+            </div>
+
+            <div class="input-group input-group-sm">
+              <input class="form-control" id="lat-input" name="latitude"
+                     placeholder="Lat" readonly required>
+              <input class="form-control" id="lng-input" name="longitude"
+                     placeholder="Lng" readonly required>
+              <button type="button" class="btn btn-outline-secondary" id="pick-location-btn">
+                Click map…
+              </button>
+              <button type="button" class="btn btn-outline-secondary d-none" id="geo-location-btn">
+                Locate
+              </button>
+            </div>
+            <small id="coord-help" class="text-muted">
+              Click <strong>Click map…</strong>, then click on the map. Drag the preview marker to fine‑tune.
+            </small>
+          </div>
+
+          <!-- Error alert -->
+          <div id="add-station-alert"
+               class="alert alert-danger py-1 px-2 small d-none mb-0"></div>
+        </div>
+
+        <div class="modal-footer py-2">
+          <button type="submit" class="btn btn-primary btn-sm">
+            <i class="fa fa-save me-1"></i>Save
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm"
+                  data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<!-- Add Competitor Modal -->
+<div class="modal fade" id="addCompetitorModal" tabindex="-1" aria-labelledby="addCompetitorLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content">
+      <form id="add-competitor-form" autocomplete="off">
+        <div class="modal-header py-2">
+          <h6 class="modal-title mb-0" id="addCompetitorLabel">Add Competitor</h6>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body py-2">
+          <div class="mb-2">
+            <label class="form-label mb-0 small" for="competitor-name">Name</label>
+            <input class="form-control form-control-sm" id="competitor-name" name="name" required maxlength="128">
+          </div>
+          <div class="mb-2">
+            <label class="form-label mb-0 small" for="competitor-color">Pin Color</label>
+            <input type="color" class="form-control form-control-color form-control-sm p-0"
+                   id="competitor-color" name="pin_color" value="#ff4d4d" required>
+          </div>
+          <div id="add-competitor-alert" class="alert alert-danger py-1 px-2 small d-none mb-0"></div>
+        </div>
+        <div class="modal-footer py-2">
+          <button type="submit" class="btn btn-primary btn-sm">
+            <i class="fa fa-save me-1"></i>Save
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="side-panel" class="side-panel">
+  <div class="sp-header">
+    <span id="sp-title">Station</span>
+    <button type="button" id="sp-close" class="btn btn-sm btn-outline-secondary">×</button>
+  </div>
+  <div id="sp-body" class="sp-body">
+    <div id="sp-meta" class="mb-2 small text-muted"></div>
+    <canvas id="sp-chart" height="160"></canvas>
+  </div>
+</div>
+
+<style>
+  .side-panel{
+    position:absolute; top:12px; right:12px; width:360px; max-width:45vw; 
+    background:#fff; border-radius:12px; box-shadow:0 10px 24px rgba(0,0,0,.2);
+    z-index:1200; display:none; overflow:hidden;
+  }
+  .side-panel.open{ display:block; }
+  .sp-header{ display:flex; justify-content:space-between; align-items:center; 
+    padding:.5rem .75rem; border-bottom:1px solid #eee; font-weight:600; }
+  .sp-body{ padding:.5rem .75rem 1rem; }
+</style>
+
+
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    window.currentUserRole = "{{ current_user.role if current_user.is_authenticated else 'viewer' }}";
+  </script>
+
+  <!-- html2canvas for JPG export -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <!-- Heatmap -->
+  <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+  <!-- Zip download -->
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+
+  <!-- Your module entry LAST, after globals are defined -->
+  <script src="{{ url_for('static', filename='js/main.js') }}?v=123" type="module"></script>
+
+  <style>
+    /* make sure the map fills the main content area */
+    #map { position:absolute; inset:0; }
+  </style>
+{% endblock %}
+

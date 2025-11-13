@@ -1,0 +1,96 @@
+# -------------------------
+# Python / Flask
+# -------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pkl
+*.db
+*.sqlite3
+instance/
+migrations/
+.env
+.env.*
+.venv/
+venv/
+env/
+ENV/
+
+# Flask cache & logs
+*.log
+*.pid
+*.swp
+*.swo
+*.bak
+*.tmp
+*.DS_Store
+
+# -------------------------
+# Node / JS (for frontend modules)
+# -------------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+dist/
+build/
+coverage/
+*.map
+
+# -------------------------
+# IDEs & Editors
+# -------------------------
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# -------------------------
+# OS generated
+# -------------------------
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# -------------------------
+# Deployment & secrets
+# -------------------------
+config.ini
+*.pem
+*.key
+*.crt
+*.csr
+*.conf
+*.service
+/secrets/
+/certs/
+/uploads/
+/backups/
+
+# -------------------------
+# Gunicorn & systemd
+# -------------------------
+*.sock
+*.pid
+*.log
+*.out
+*.err
+gunicorn*
+retailmap.service
+
+# -------------------------
+# Nginx (local or staging)
+# -------------------------
+/etc/nginx/sites-available/retailmap
+/etc/nginx/sites-enabled/retailmap
+*.conf.bak
+
+# -------------------------
+# Misc
+# -------------------------
+*.zip
+*.tar.gz
+*.rar
+*.7z

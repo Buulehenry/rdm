@@ -1,0 +1,433 @@
+/* =============================
+   Root & Base Layout Styling
+   ============================= */
+:root {
+  --rubis-green: #007A33;
+  --rubis-red: #D52B1E;
+  --bg-glass: rgba(255, 255, 255, 0.85);
+  --bg-glass-dark: rgba(25, 25, 25, 0.75);
+  --shadow-soft: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --radius: 10px;
+  --font-main: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: var(--font-main);
+  background-color: #f7f9fa;
+}
+
+main {
+  height: calc(100vh - 56px);
+}
+
+#map {
+  height: 100%;
+  width: 100%;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+}
+
+/* Small Viewport Scroll Fix */
+@media (max-height: 550px) {
+  html, body { overflow: auto; }
+  main {
+    height: auto;
+    min-height: calc(100vh - 56px);
+  }
+}
+
+/* =============================
+   Navbar
+   ============================= */
+.navbar {
+  z-index: 1000;
+  border-bottom: 2px solid var(--rubis-green);
+  background-color: #ffffff;
+}
+
+/* =============================
+   Leaflet Controls
+   ============================= */
+.leaflet-control.custom-title,
+.leaflet-control.custom-filters {
+  background: rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 4px 12px rgba(1, 53, 13, 0.15);
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  max-width: 220px;
+  max-height: 200px;         /* adjust as needed */
+  overflow-y: auto;          /* enable vertical scrolling */
+  padding-right: 4px;
+  color: #333;
+}
+
+/* Optional: style the scrollbar */
+.leaflet-control.custom-filters::-webkit-scrollbar {
+  width: 6px;
+}
+.leaflet-control.custom-filters::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.05);
+}
+.leaflet-control.custom-filters::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.2);
+  border-radius: 3px;
+}
+
+.leaflet-control.custom-filters {
+  max-width: 200px;
+  line-height: 1.3;
+}
+
+.leaflet-control.custom-filters .form-check {
+  margin: 4px 0;
+}
+
+.leaflet-control.custom-filters input {
+  margin-right: 6px;
+}
+
+/* =============================
+   Leaflet Add Station Button
+   ============================= */
+.leaflet-bar button {
+  background: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s, box-shadow 0.15s;
+}
+
+.leaflet-bar button:hover { background: #f0f0f0; }
+.leaflet-bar button:active { background: #e3e3e3; }
+.leaflet-bar button:focus-visible {
+  outline: 2px solid var(--rubis-green);
+  outline-offset: 2px;
+}
+
+/* =============================
+   Marker Hover Effects
+   ============================= */
+.custom-marker div {
+  transition: transform 0.12s ease;
+}
+.custom-marker div:hover {
+  transform: scale(1.2);
+}
+
+/* =============================
+   Modal Enhancements
+   ============================= */
+#addStationModal .modal-content,
+#addCompetitorModal .modal-content {
+  border-radius: var(--radius);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  border: none;
+}
+
+#addStationModal .form-label.small {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  color: #555;
+}
+
+#addStationModal .input-group input[readonly] {
+  background: #f7f7f7;
+  cursor: not-allowed;
+}
+
+#coord-mode-group .btn-check:checked + .btn {
+  font-weight: 600;
+}
+
+#addStationModal small#coord-help {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 0.75rem;
+  line-height: 1.2;
+}
+
+/* =============================
+   Toolbar Controls
+   ============================= */
+.leaflet-control.map-toolbar {
+  background: #ffffffcc;
+  padding: 6px;
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: var(--shadow-soft);
+}
+
+.map-toolbar-btn {
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: transparent;
+  color: #333;
+  border-radius: 8px;
+  transition: background 0.2s, transform 0.15s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.map-toolbar-btn:hover {
+  background: #eeeeee;
+}
+
+.map-toolbar-btn:active {
+  transform: scale(0.95);
+}
+
+.map-toolbar-btn.active {
+  background: var(--rubis-green);
+  color: white;
+}
+
+.map-toolbar-btn.danger.active {
+  background: var(--rubis-red);
+}
+
+/* Tooltip */
+.map-toolbar-btn[data-tip]:hover::after {
+  content: attr(data-tip);
+  position: absolute;
+  left: 48px;
+  white-space: nowrap;
+  background: rgba(0, 0, 0, 0.85);
+  color: #fff;
+  font-size: 11px;
+  padding: 3px 6px;
+  border-radius: 4px;
+  z-index: 10;
+}
+
+/* =============================
+   Fullscreen Map View
+   ============================= */
+.map-fullscreen {
+  position: fixed !important;
+  top: 0; left: 0;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 1200;
+  border-radius: 0 !important;
+}
+
+body.fullscreen-lock {
+  overflow: hidden;
+}
+
+.pick-banner {
+  position: fixed;
+  top: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1f2937;
+  color: white;
+  padding: 6px 14px;
+  border-radius: 30px;
+  font-size: 0.8rem;
+  z-index: 1400;
+  box-shadow: 0 4px 12px -4px rgba(0, 0, 0, 0.4);
+}
+
+/* =============================
+   Dark Mode Enhancements
+   ============================= */
+body.dark .leaflet-control.custom-title,
+body.dark .leaflet-control.custom-filters {
+  background: var(--bg-glass-dark);
+  color: #eee;
+}
+body.dark .leaflet-bar button {
+  background: #222;
+  color: #eee;
+}
+body.dark .leaflet-bar button:hover {
+  background: #2d2d2d;
+}
+body.dark #addStationModal .modal-content {
+  background: #1e1e1e;
+  color: #eee;
+}
+body.dark #addStationModal .input-group input[readonly] {
+  background: #2a2a2a;
+  color: #ccc;
+}
+body.dark #addStationModal .form-label.small {
+  color: #bbb;
+}
+
+
+/* ------------------------------------- Competitor Manager Panel */
+#competitor-panel {
+  position: fixed;
+  top: 0;
+  right: -340px;
+  width: 320px;
+  height: 100%;
+  background: rgba(31, 39, 48, 0.1); /* translucent dark background */
+  color: #f1f1f1;
+  box-shadow: -6px 0 18px rgba(0, 0, 0, 0.45);
+  z-index: 1500;
+  display: flex;
+  flex-direction: column;
+  transition: right 0.28s ease;
+  font-size: 0.85rem;
+  backdrop-filter: blur(8px);
+  border-left: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+#competitor-panel.open {
+  right: 0;
+}
+
+#competitor-panel .cp-header {
+  padding: 12px 16px;
+  background: rgba(2, 78, 22, 0.95);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  letter-spacing: 0.5px;
+  font-size: 0.9rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  text-transform: uppercase;
+}
+
+#competitor-panel .cp-body {
+  padding: 14px 16px 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* Add Competitor Input Styling */
+#competitor-panel .comp-add .form-control {
+  font-size: 0.8rem;
+  padding: 0.3rem 0.5rem;
+  border-radius: 6px;
+  margin: 2px;
+  border: 0px solid #3b4c5a;
+  color: #fff;
+}
+
+/* Each Competitor Row */
+#competitor-panel .comp-row {
+  display: grid;
+  grid-template-columns: 46px 1fr 40px 60px;
+  gap: 6px;
+  align-items: center;
+  background: rgba(4, 48, 0, 0.05);
+  padding: 8px 8px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+#competitor-panel .comp-row:hover {
+  background: rgba(159, 0, 0, 0.08);
+}
+
+/* Competitor Name Input */
+#competitor-panel .comp-row input.comp-name {
+  font-size: 0.76rem;
+  padding: 0.3rem 0.5rem;
+  border-radius: 6px;
+  color: #252525;
+  
+  border: 0px solid #354a5e;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#competitor-panel .comp-row input.comp-name:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(255, 131, 90, 0.35);
+  border-color: #ff865a;
+}
+
+/* Color Picker */
+#competitor-panel .comp-color {
+  width: 40px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+/* Action Buttons */
+#competitor-panel .comp-actions {
+  display: flex;
+  gap: 4px;
+  justify-content: flex-end;
+}
+
+#competitor-panel .comp-actions .btn {
+  padding: 2px 8px;
+  font-size: 0.7rem;
+  border-radius: 4px;
+  background-color: #087100;
+  border: none;
+  color: #f1f1f1;
+  transition: background 0.2s ease;
+}
+
+#competitor-panel .comp-actions .btn:hover {
+  background-color: #da1900;
+}
+
+/* Badges */
+#competitor-panel .badge {
+  font-size: 0.6rem;
+  border: 0px solid #ffffff;
+  padding: 2px 6px;
+  border-radius: 12px;
+}
+
+/* Custom Scrollbar */
+#competitor-panel::-webkit-scrollbar {
+  width: 8px;
+}
+#competitor-panel::-webkit-scrollbar-track {
+  background: #087100;
+}
+#competitor-panel::-webkit-scrollbar-thumb {
+  background: #087100;
+  border-radius: 4px;
+}
+#competitor-panel::-webkit-scrollbar-thumb:hover {
+  background: #087100;
+}
+
+.coordinate-display {
+  background: rgba(255,255,255,0.85);
+  padding: 4px 8px;
+  font-size: 0.85rem;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* Top Stations card: make it a bit wider */
+#top-stations-card {
+  min-width: 520px;                /* <- bump this to taste (e.g. 480–560px) */
+  max-width: min(640px, 50vw);     /* stay responsive */
+}
+
+/* If the header controls wrap, keep them on one line nicely */
+#top-stations-card .ts-header {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  flex-wrap: wrap;                  /* or 'nowrap' if you prefer no wrapping */
+}
