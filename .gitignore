@@ -35,6 +35,8 @@ yarn-debug.log*
 yarn-error.log*
 package-lock.json
 dist/
+!app/static/vendor/**/dist/
+!app/static/vendor/**/dist/**
 build/
 coverage/
 *.map
