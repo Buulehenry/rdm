@@ -1,0 +1,49 @@
+name: rdm
+services:
+  web:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    environment:
+      SECRET_KEY: ${SECRET_KEY:?Set a unique production secret}
+      DATABASE_URL: sqlite:////data/rdm.db
+      OSRM_BASE_URL: http://osrm:5000
+    volumes:
+      - ./data:/data
+      - ./feedback:/app/app/data
+    restart: unless-stopped
+    mem_limit: 512m
+    security_opt: [no-new-privileges:true]
+    cap_drop: [ALL]
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/login', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging: &logs
+      driver: json-file
+      options: {max-size: 5m, max-file: '2'}
+  osrm:
+    image: ghcr.io/project-osrm/osrm-backend:v5.27.1@sha256:855614a38f464b0558a2ad6eaa7cb8c139f39887da9b38b485ce453c6e6e6124
+    command: [osrm-routed, --algorithm, mld, --threads, '2', --verbosity, WARNING, --max-viaroute-size, '42', --max-table-size, '42', --max-trip-size, '42', /data/uganda-latest.osrm]
+    volumes: [../private-osrm/data:/data:ro]
+    restart: unless-stopped
+    mem_limit: 1g
+    security_opt: [no-new-privileges:true]
+    cap_drop: [ALL]
+    logging: *logs
+  caddy:
+    image: caddy:2-alpine
+    environment:
+      RDM_HOST: ${RDM_HOST:?Set the HTTPS hostname}
+    ports: ['80:80', '443:443', '443:443/udp']
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    restart: unless-stopped
+    mem_limit: 128m
+    logging: *logs
+volumes:
+  caddy_data:
+  caddy_config:

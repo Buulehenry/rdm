@@ -1,0 +1,16 @@
+*
+!requirements.txt
+!requirements-production.txt
+!config.py
+!run.py
+!app/
+!app/**
+!migrations/
+!migrations/**
+!deploy/
+!deploy/wsgi.py
+!deploy/initialize.py
+!deploy/seed_users.py
+**/__pycache__
+**/*.pyc
+app/data/

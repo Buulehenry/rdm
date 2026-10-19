@@ -1,0 +1,10 @@
+# A lightly used pilot on a 1 GB Droplet. Preprocess roads on the local PC.
+# Start with: docker compose -f compose.yaml -f budget.yaml up -d
+services:
+  web:
+    mem_limit: 192m
+  osrm:
+    mem_limit: 640m
+    command: [osrm-routed, --algorithm, mld, --threads, '1', --verbosity, WARNING, --max-viaroute-size, '42', --max-table-size, '42', --max-trip-size, '42', /data/uganda-latest.osrm]
+  caddy:
+    mem_limit: 64m

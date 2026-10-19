@@ -98,3 +98,5 @@ retailmap.service
 /private-osrm/benchmark.json
 /artifacts/
 /local-preview.png
+/deploy/data/
+/deploy/feedback/
