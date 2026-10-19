@@ -214,12 +214,12 @@
   </script>
 
   <!-- html2canvas for JPG export -->
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="{{ url_for('static', filename='vendor/html2canvas-1.4.1/dist/html2canvas.min.js') }}"></script>
   <!-- Heatmap -->
-  <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+  <script src="{{ url_for('static', filename='vendor/leaflet.heat-0.2.0/dist/leaflet-heat.js') }}"></script>
   <!-- Zip download -->
-  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+  <script src="{{ url_for('static', filename='vendor/jszip-3.10.1/dist/jszip.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendor/file-saver-2.0.5/dist/FileSaver.min.js') }}"></script>
 
   <!-- Your module entry LAST, after globals are defined -->
   <script src="{{ url_for('static', filename='js/main.js') }}?v=123" type="module"></script>

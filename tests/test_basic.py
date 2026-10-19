@@ -1,4 +1,7 @@
 import unittest
+import re
+from html.parser import HTMLParser
+from urllib.parse import urljoin, urlsplit
 from app import create_app, db
 from app.models import User
 from config import Config
@@ -43,6 +46,39 @@ class BasicTests(unittest.TestCase):
                 result = self.client.get(path)
                 self.assertEqual(result.status_code, 200)
                 self.assertTrue(result.is_json)
+
+    def test_frontend_assets_work_without_public_cdns(self):
+        class Assets(HTMLParser):
+            def __init__(self):
+                super().__init__()
+                self.urls = []
+            def handle_starttag(self, tag, attributes):
+                values = dict(attributes)
+                if tag == 'script' and values.get('src'):
+                    self.urls.append(values['src'])
+                if tag == 'link' and values.get('rel') == 'stylesheet':
+                    self.urls.append(values['href'])
+
+        pages = [self.client.get('/login')]
+        self.client.post('/login', data={'username': 'tester', 'password': 'test-password'})
+        pages.append(self.client.get('/dashboard'))
+        for page in pages:
+            parser = Assets()
+            parser.feed(page.get_data(as_text=True))
+            self.assertTrue(parser.urls)
+            for url in parser.urls:
+                with self.subTest(asset=url):
+                    self.assertTrue(url.startswith('/static/'), url)
+                    with self.client.get(url) as response:
+                        self.assertEqual(response.status_code, 200)
+                        if url.endswith('.css'):
+                            css = response.get_data(as_text=True)
+                            for dependency in re.findall(r'url\([\"\']?([^\)\"\']+)', css):
+                                if dependency.startswith('data:'):
+                                    continue
+                                path = urlsplit(urljoin(url, dependency)).path
+                                with self.client.get(path) as asset:
+                                    self.assertEqual(asset.status_code, 200, path)
 
 
 if __name__ == '__main__':

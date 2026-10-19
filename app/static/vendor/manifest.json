@@ -1,0 +1,50 @@
+[
+  {
+    "package": "bootstrap",
+    "version": "5.3.0",
+    "source": "https://registry.npmjs.org/bootstrap/-/bootstrap-5.3.0.tgz",
+    "sha256": "9f63ace4e98f71c50aab3948772e3bf5e176f6b39708e914b09ed32f845a8db2"
+  },
+  {
+    "package": "bootstrap-icons",
+    "version": "1.10.5",
+    "source": "https://registry.npmjs.org/bootstrap-icons/-/bootstrap-icons-1.10.5.tgz",
+    "sha256": "a0dcbd8ad92e20321c0525d980c020f3da197058f4d78709cf1b0e756646a128"
+  },
+  {
+    "package": "leaflet",
+    "version": "1.9.3",
+    "source": "https://registry.npmjs.org/leaflet/-/leaflet-1.9.3.tgz",
+    "sha256": "10d016716b56048661eaf9cde004dc82e80bd3613b52c4f53cf5aec73088006c"
+  },
+  {
+    "package": "@fortawesome/fontawesome-free",
+    "version": "6.4.0",
+    "source": "https://registry.npmjs.org/@fortawesome/fontawesome-free/-/fontawesome-free-6.4.0.tgz",
+    "sha256": "385681597a3301b5f56fc70136274f9fd081e0ac5b9f8222351ac7e89465dfa2"
+  },
+  {
+    "package": "html2canvas",
+    "version": "1.4.1",
+    "source": "https://registry.npmjs.org/html2canvas/-/html2canvas-1.4.1.tgz",
+    "sha256": "542536a762933dadf7605b275ae096a31734ab3cf488069b7d75523c309f5b12"
+  },
+  {
+    "package": "leaflet.heat",
+    "version": "0.2.0",
+    "source": "https://registry.npmjs.org/leaflet.heat/-/leaflet.heat-0.2.0.tgz",
+    "sha256": "6d980bce16b6bbe8e3b124d200dfd12964ff8f6bfff44eb3a47344f97dfc5c7f"
+  },
+  {
+    "package": "jszip",
+    "version": "3.10.1",
+    "source": "https://registry.npmjs.org/jszip/-/jszip-3.10.1.tgz",
+    "sha256": "5117f4a2a645aeb307bf3b829c575ad58135cc97e75291e594532ab5b5b21b23"
+  },
+  {
+    "package": "file-saver",
+    "version": "2.0.5",
+    "source": "https://registry.npmjs.org/file-saver/-/file-saver-2.0.5.tgz",
+    "sha256": "fe24d9050bb56fad3ba75747f11cc600aa340cfa1c6f07454b6e7b0ba9627cf7"
+  }
+]
