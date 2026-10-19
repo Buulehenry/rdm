@@ -28,6 +28,9 @@ database backups before relying on it for operational visit history.
 6. Create `deploy/feedback`; give `deploy/data` and `deploy/feedback` to UID 10001.
    Create a private `deploy/.env` containing a fresh random `SECRET_KEY` of at least
    32 characters and `RDM_HOST=your-hostname`. Do not reuse the local app secret.
+   Set `RDM_IP` to the server's public IPv4 address. Caddy also serves trusted HTTPS
+   directly on this address using Let's Encrypt's short-lived certificate profile;
+   Caddy automatically renews these certificates. The hostname remains available.
 
 ## Start
 

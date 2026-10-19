@@ -36,6 +36,7 @@ services:
     image: caddy:2-alpine
     environment:
       RDM_HOST: ${RDM_HOST:?Set the HTTPS hostname}
+      RDM_IP: ${RDM_IP:?Set the server public IPv4 address}
     ports: ['80:80', '443:443', '443:443/udp']
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro

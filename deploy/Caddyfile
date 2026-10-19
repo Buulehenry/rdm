@@ -1,4 +1,22 @@
+{
+    default_sni {$RDM_IP}
+}
+
 {$RDM_HOST} {
+    encode zstd gzip
+    request_body {
+        max_size 5MB
+    }
+    reverse_proxy web:8000
+}
+
+{$RDM_IP} {
+    tls {
+        issuer acme {
+            dir https://acme-v02.api.letsencrypt.org/directory
+            profile shortlived
+        }
+    }
     encode zstd gzip
     request_body {
         max_size 5MB
