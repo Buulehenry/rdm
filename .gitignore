@@ -95,6 +95,7 @@ retailmap.service
 *.rar
 *.7z
 /private-osrm/data/
+/private-osrm/build-data/
 /private-osrm/benchmark.json
 /artifacts/
 /local-preview.png

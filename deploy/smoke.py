@@ -15,7 +15,10 @@ response = client.post('/login', data={'username': 'admin', 'password': password
 assert response.status_code == 302
 cookie = response.headers['Set-Cookie']
 assert 'Secure' in cookie and 'HttpOnly' in cookie and 'SameSite=Lax' in cookie
-assert client.get('/dashboard', base_url='https://rdm.example.com').status_code == 200
+dashboard = client.get('/dashboard', base_url='https://rdm.example.com')
+assert dashboard.status_code == 200
+assert dashboard.headers['Referrer-Policy'] == 'strict-origin-when-cross-origin'
+assert b'https://tile.openstreetmap.org/{z}/{x}/{y}.png' in dashboard.data
 assert client.get('/api/journeys/config', base_url='https://rdm.example.com').status_code == 200
 runpy.run_module('deploy.initialize', run_name='__main__')
 with app.app_context():

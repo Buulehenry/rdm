@@ -22,6 +22,9 @@ database backups before relying on it for operational visit history.
    to the matching directory on the server, keeping the pinned OSRM image version.
    The original PBF is not required at runtime. Local preprocessing allows a
    smaller server without needing enough RAM for the road extraction step.
+   When uploading is too slow, `prepare_roads_budget.sh` can instead prepare the
+   graph on the 1 GB server using swap and a 640 MB resident-memory limit. This is
+   slow and intended for initial setup or a maintenance window, not normal use.
 6. Create `deploy/feedback`; give `deploy/data` and `deploy/feedback` to UID 10001.
    Create a private `deploy/.env` containing a fresh random `SECRET_KEY` of at least
    32 characters and `RDM_HOST=your-hostname`. Do not reuse the local app secret.
@@ -48,6 +51,9 @@ Do not start with the local test administrator account.
 Verify HTTPS `/login`, authenticated dashboard, station count, private OSRM Route,
 Trip and Table, journey preview, and mobile location permission/live movement.
 The container health check covers the login page; it does not prove routing or GPS.
+`docker compose exec -T web python - < verify.py` checks private routing and the
+authenticated route API without writing journeys. Adapt seed-specific station
+IDs if deploying a different dataset.
 
 ## Backups and updates
 

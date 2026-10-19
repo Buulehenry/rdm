@@ -22,6 +22,8 @@ app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
 @app.after_request
 def secure_headers(response):
     response.headers['X-Content-Type-Options'] = 'nosniff'
-    response.headers['Referrer-Policy'] = 'same-origin'
+    # Public map tile services require a referring site. Send only our origin
+    # cross-origin, never the dashboard path or query string.
+    response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
     response.headers['Strict-Transport-Security'] = 'max-age=31536000'
     return response

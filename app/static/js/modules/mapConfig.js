@@ -31,8 +31,9 @@ export function createMap() {
   L.control.zoom({ position: 'bottomright' }).addTo(map);
 
   // Basemap (ensure CORS-friendly tiles for export snapshots)
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OSM | &copy; BHENS | &copy; RUBiS Energy Uganda',
+  const tileConfig = document.getElementById('map').dataset;
+  L.tileLayer(tileConfig.tileUrl || 'https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: (tileConfig.tileAttribution || '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors') + ' | &copy; BHENS | &copy; RUBiS Energy Uganda',
     maxZoom: 19,
     crossOrigin: true
   }).addTo(map);

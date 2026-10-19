@@ -9,7 +9,9 @@
 </noscript>
 
 <!-- Map container -->
-<div id="map" class="h-100 w-100"></div>
+<div id="map" class="h-100 w-100"
+     data-tile-url="{{ config.MAP_TILE_URL }}"
+     data-tile-attribution="{{ config.MAP_ATTRIBUTION }}"></div>
 
 <!-- Add / Edit Station Modal -->
 <div class="modal fade" id="addStationModal" tabindex="-1"

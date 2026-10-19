@@ -35,7 +35,7 @@ class Config:
     # Default tile layer; can override via env var
     MAP_TILE_URL = os.environ.get(
         'MAP_TILE_URL',
-        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+        'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
     )
     MAP_ATTRIBUTION = os.environ.get(
         'MAP_ATTRIBUTION',
