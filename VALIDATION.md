@@ -96,6 +96,26 @@ Uganda-only routing rejects points too far from an eligible road. Some supplied
 stations are outside Uganda; add a separately benchmarked regional extract if those
 must be visited. The maximum road snapping radius defaults to 1 km.
 
-No Hetzner deployment, production database migration, public hostname, HTTPS
-certificate or production load test has been performed. See
-`ROUTING-AND-JOURNEYS.md` for setup, user guide, configuration and deployment steps.
+## DigitalOcean deployment — 19 October 2026
+
+- Ubuntu 24.04, 1 GB Basic Droplet in London, $6/month before taxes. Gunicorn,
+  Caddy and private Uganda OSRM run in restartable containers with persistent data.
+- Trusted HTTPS verified on both the server IP and temporary hostname. Direct-IP
+  certificates use Let's Encrypt's short-lived profile with Caddy renewal.
+- Seeded 530 stations, reviewed Bugiri correction, and three requested accounts
+  (two analysts and one administrator); no local users or test journeys copied.
+- Production image passed isolated fresh migrations, idempotent admin setup,
+  authentication, dashboard, journey configuration and secure-cookie/header checks.
+- Fixed a deployment referrer header that blocked public OSM tiles. Browser check
+  confirms map tiles and station markers render at the direct HTTPS IP address.
+- Live private Route, Table, round-trip/fixed-end Trip and authenticated routing
+  API checks passed. Read-only journey preview returned Seeta -> Jinja -> Bugiri.
+- Steady-state observed container memory: OSRM about 413 MB, web about 71 MB,
+  Caddy about 25 MB. This is a light-use pilot, not a production load benchmark.
+- Daily consistent SQLite snapshots configured; initial production copy also saved
+  on the local PC. Daily snapshots remain on the same server until copied offsite.
+- Firewall exposes web ports only publicly and restricts SSH to the setup IP;
+  OSRM has no published host port. Deployment/account secrets are excluded from Git.
+
+Real-phone movement and sustained production load still require field validation.
+Hetzner has not been deployed. See `deploy/README.md` for operations.

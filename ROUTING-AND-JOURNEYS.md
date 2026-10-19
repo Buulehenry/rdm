@@ -24,7 +24,7 @@ station category. Target polygons are territories, not point destinations.
   `stop-local.ps1`, `scripts/setup_local.py`, `requirements-local.txt`,
   `LOCAL-SETUP.md`, and repaired `upload_stations.py`.
 - Runtime secrets, SQLite databases, backups, generated road files and benchmark
-  output remain ignored. No commits, pushes or deployment have been performed.
+  output remain ignored. DigitalOcean production setup is in `deploy/README.md`.
 
 ## Local use
 

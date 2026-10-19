@@ -32,5 +32,6 @@ Verified login, authentication rejection, dashboard rendering, six main read API
 and browser map rendering. This is a smoke test, not full deployment validation.
 Test editing, imports, exports, rankings and permissions before deployment.
 
-Hetzner deployment has not been performed. Production needs its own secret and
-accounts, a backed-up database, HTTPS, service configuration and a security review.
+DigitalOcean deployment was completed on 19 October 2026 with separate production
+accounts and secret, persistent data, private routing, HTTPS and daily database
+snapshots. See `deploy/README.md`. Hetzner has not been deployed.
