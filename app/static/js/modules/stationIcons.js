@@ -127,14 +127,11 @@ function logoPin(latlng, pane, url, color) {
 }
 
 function circleMarker(latlng, pane, color) {
-  return L.circleMarker(latlng, {
-    pane,
-    radius: 7,
-    color,
-    fillColor: color,
-    fillOpacity: 0.85,
-    weight: 2
-  });
+  return L.marker(latlng, { pane, icon: L.divIcon({
+    className: 'custom-marker',
+    html: `<div style="width:16px;height:16px;border-radius:50%;background:${color};border:2px solid white;box-shadow:0 1px 4px #0004"></div>`,
+    iconSize: [16, 16], iconAnchor: [8, 8]
+  }) });
 }
 
 function divMarker(latlng, pane, html) {

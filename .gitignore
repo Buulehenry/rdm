@@ -9,7 +9,7 @@ __pycache__/
 *.db
 *.sqlite3
 instance/
-migrations/
+# Database migrations are source-controlled.
 .env
 .env.*
 .venv/
@@ -94,3 +94,7 @@ retailmap.service
 *.tar.gz
 *.rar
 *.7z
+/private-osrm/data/
+/private-osrm/benchmark.json
+/artifacts/
+/local-preview.png

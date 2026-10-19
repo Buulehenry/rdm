@@ -79,6 +79,10 @@ export function addToolbar(map, refreshStations) {
 
       // --- Add Station
       c.appendChild(btn({
+        id:'tb-journeys', icon:'fa-route', tip:'Journey Planner',
+        click: () => map.fire('journey:open')
+      }));
+      c.appendChild(btn({
         id:'tb-add-station', icon:'fa-plus', tip:'Add Station',
         click: () => {
           setEditMode(false, map);
@@ -116,6 +120,9 @@ export function addToolbar(map, refreshStations) {
 
       exportBtn.addEventListener('click', (e) => {
         e.preventDefault(); e.stopPropagation();
+        const rect = exportBtn.getBoundingClientRect();
+        scopeMenu.style.left = `${rect.right + 8}px`;
+        scopeMenu.style.top = `${rect.top}px`;
         wrap.classList.toggle('open');
       });
       document.addEventListener('click', () => wrap.classList.remove('open'));
@@ -230,6 +237,21 @@ export function addToolbar(map, refreshStations) {
           click: () => showBulkStationsDialog()
         }));
       }
+
+      // Keep daily map actions visible; secondary tools remain one click away.
+      const moreTools = document.createElement('div');
+      moreTools.className = 'map-more-tools';
+      moreTools.hidden = true;
+      const primary = new Set(['tb-journeys', 'tb-add-station', 'tb-edit', 'tb-full']);
+      [...c.children].forEach(child => {
+        if (!primary.has(child.id) && !child.classList.contains('map-toolbar-export')) moreTools.appendChild(child);
+      });
+      const moreButton = btn({id:'tb-more',icon:'fa-ellipsis',tip:'More map tools',click:b=>{
+        moreTools.hidden = !moreTools.hidden;
+        b.setAttribute('aria-expanded', String(!moreTools.hidden));
+      }});
+      moreButton.setAttribute('aria-expanded', 'false');
+      c.append(moreButton, moreTools);
 
       // Prevent map panning/zoom while using toolbar
       L.DomEvent.disableClickPropagation(c);
@@ -498,6 +520,8 @@ function btn({ id, icon, tip, click, toggle=false, extra='' }) {
   el.id = id;
   el.className = `map-toolbar-btn ${extra}`.trim();
   el.setAttribute('data-tip', tip || '');
+  el.setAttribute('aria-label', tip || 'Map tool');
+  el.title = tip || '';
   el.innerHTML = `<i class="fa ${icon}"></i>`;
   el.addEventListener('click', e => { e.preventDefault(); click(el); });
   attachFloatingTip(el); // <<— attach floating tooltip to every icon
@@ -516,6 +540,7 @@ function attachFloatingTip(el){
     tipEl.style.top  = `${r.top + r.height/2}px`;
   };
   const show = () => {
+    if (tipEl) return;
     tipEl = document.createElement('div');
     tipEl.className = 'map-floating-tip';
     tipEl.textContent = text;
@@ -532,6 +557,7 @@ function attachFloatingTip(el){
     tipEl = null;
   };
   el.addEventListener('mouseenter', show);
+  el.addEventListener('focus', show);
   el.addEventListener('mouseleave', hide);
   el.addEventListener('blur', hide);
 }

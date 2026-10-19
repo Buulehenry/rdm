@@ -36,7 +36,16 @@ export async function addFiltersControl(map, onChange) {
     var filterCtrl = L.control({ position: 'topright' });
     filterCtrl.onAdd = function() {
         _containerEl = L.DomUtil.create('div', 'leaflet-control custom-filters');
-        _containerEl.innerHTML = createFiltersMarkup();
+        _containerEl.innerHTML = '<button type="button" class="filters-toggle" aria-expanded="false">Map filters <span aria-hidden="true">☰</span></button><div class="filters-body" hidden>' + createFiltersMarkup() + '</div>';
+        const toggle = _containerEl.querySelector('.filters-toggle');
+        const body = _containerEl.querySelector('.filters-body');
+        const expanded = window.innerWidth > 760;
+        body.hidden = !expanded;
+        toggle.setAttribute('aria-expanded', String(expanded));
+        toggle.onclick = () => {
+            body.hidden = !body.hidden;
+            toggle.setAttribute('aria-expanded', String(!body.hidden));
+        };
 
         // Cache elements
         _compListEl = _containerEl.querySelector('#comp-filters');
@@ -165,7 +174,10 @@ function buildCompetitorCheckboxes() {
         var safeColor = String(c.pin_color || '');
         div.innerHTML =
             '<input class="form-check-input" type="checkbox" data-id="' + c.id + '" id="comp_' + c.id + '" checked>' +
-            '<label class="form-check-label" for="comp_' + c.id + '" style="color:' + safeColor + '">' + c.name + '</label>';
+            '<label class="form-check-label" for="comp_' + c.id + '"></label>';
+        const label = div.querySelector('label');
+        label.textContent = c.name;
+        if (/^#[0-9a-f]{3,6}$/i.test(safeColor)) label.style.borderRight = '5px solid ' + safeColor;
         _compListEl.appendChild(div);
     });
 }

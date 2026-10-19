@@ -11,7 +11,9 @@ import { setEditMode, setDeleteMode } from './modules/modes.js';
 import { initCompetitorModal } from './modules/competitorModal.js';
 import { initCompetitorManager } from './modules/competitorManager.js';
 import { addDistrictLayer, fitToDistrict } from './modules/districtLayer.js';
-import { mountRankingsDrawer } from './modules/rankingsDrawer.js';
+import { addSnapshotControl } from './modules/snapshotControl.js';
+import { createNavigation } from './modules/navigationControl.js';
+import { createJourneyPlanner } from './modules/journeyPlanner.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
   const mapEl = document.getElementById('map');
@@ -65,6 +67,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Renderer
   const renderer = StationTargetRenderer(map);
   map._rendererRef = renderer;
+  const navigation = createNavigation(map);
+  createJourneyPlanner(map, renderer, navigation);
+  map._navigateStation = navigation.navigate;
 
   // Filters: refresh & auto-zoom to district
   addFiltersControl(map, () => {
@@ -94,7 +99,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
   // Rankings (this month by default)
-  mountRankingsDrawer({ width: 560 });
+  addSnapshotControl(map, renderer);
 
   // Expose for debugging
   window._MAP = map;

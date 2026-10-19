@@ -215,6 +215,7 @@ export async function exportCurrentMap(map, { scope = 'current', fileBase = 'Map
   const mapEl = document.getElementById('map');
   const scale = Math.max(2, window.devicePixelRatio || 1);
   const canvas = await html2canvas(mapEl, {
+    ignoreElements: el => el.matches('.map-toolbar, .custom-filters, .coordinate-display, .leaflet-control-zoom, .snapshot-control'),
     useCORS: true,
     allowTaint: false,
     backgroundColor: '#ffffff',

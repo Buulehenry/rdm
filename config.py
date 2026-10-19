@@ -3,6 +3,17 @@ import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
+    OSRM_BASE_URL = os.environ.get('OSRM_BASE_URL', '')
+    OSRM_CONNECT_TIMEOUT = float(os.environ.get('OSRM_CONNECT_TIMEOUT', 3))
+    OSRM_READ_TIMEOUT = float(os.environ.get('OSRM_READ_TIMEOUT', 12))
+    OSRM_CACHE_SECONDS = int(os.environ.get('OSRM_CACHE_SECONDS', 60))
+    OSRM_MAX_SNAP_METERS = int(os.environ.get('OSRM_MAX_SNAP_METERS', 1000))
+    ROUTING_REQUESTS_PER_MINUTE = int(os.environ.get('ROUTING_REQUESTS_PER_MINUTE', 30))
+    JOURNEY_MAX_STOPS = 20
+    NAV_ARRIVAL_METERS = int(os.environ.get('NAV_ARRIVAL_METERS', 100))
+    NAV_DEVIATION_METERS = int(os.environ.get('NAV_DEVIATION_METERS', 80))
+    NAV_MAX_ACCURACY_METERS = int(os.environ.get('NAV_MAX_ACCURACY_METERS', 100))
+    MAX_CONTENT_LENGTH = 5 * 1024 * 1024
     # Security
     SECRET_KEY = os.environ.get('SECRET_KEY', 'you-will-change-this')
 

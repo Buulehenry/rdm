@@ -8,3 +8,4 @@ psycopg2-binary      # PostgreSQL driver with PostGIS support
 python-dotenv        # load env vars from .env files
 Flask-Cors           # enable CORS if you need cross‑origin access
 gunicorn            # production WSGI server
+tzdata              # IANA time zones, including on Windows

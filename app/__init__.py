@@ -21,6 +21,9 @@ def create_app(config_class=Config):
     db.init_app(app)
     migrate.init_app(app, db)
     login_manager.init_app(app)
+    from app import journey_models
+    from app.services.osrm import OSRM
+    app.extensions['osrm'] = OSRM(app.config)
 
     # Redirect unauthorized users to login
     login_manager.login_view = 'auth.login'
@@ -32,6 +35,8 @@ def create_app(config_class=Config):
 
     app.register_blueprint(auth_bp)      # <— our auth routes (/login, /logout)
     init_routes(app)                     # <— your existing blueprint registrar
+    from app.routes.journeys import bp as journeys_bp
+    app.register_blueprint(journeys_bp)
 
     # Root URL → dashboard (will be @login_required in dashboard blueprint)
     @app.route('/')

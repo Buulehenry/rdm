@@ -594,6 +594,9 @@ def update_station(station_id):
 @roles_required("admin")
 def delete_station(station_id):
     station = Station.query.get_or_404(station_id)
+    from app.journey_models import JourneyStop
+    if JourneyStop.query.filter_by(station_id=station_id).first():
+        abort(409, description='This station is referenced by a journey. Keep it to preserve visit history.')
     db.session.delete(station)
     db.session.commit()
     return ("", 204)

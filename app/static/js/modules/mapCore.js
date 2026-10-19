@@ -27,6 +27,22 @@ export function StationTargetRenderer(map) {
   let _lastTargetGeoJSON  = null;
   let _loadingStations = false;
   let _loadingTargets  = false;
+  let snapshotMode = false;
+  const snapshotPositions = new Map();
+  let stationScope = {mode:'all',stationIds:[],contextId:null};
+  function setStationVisibility(mode, stationIds=[], contextId=null) {
+    if(!['all','journey','hidden'].includes(mode)) return;
+    stationScope={mode,stationIds:stationIds.map(Number),contextId};
+    renderStationsFiltered();
+    map.fire('stationpins:changed',stationScope);
+  }
+
+  function setSnapshotMode(enabled) {
+    snapshotMode = enabled;
+    if (!enabled) snapshotPositions.clear();
+    map.closePopup();
+    renderStationsFiltered();
+  }
 
   /* -------------------- Public Loads -------------------- */
 
@@ -70,6 +86,9 @@ export function StationTargetRenderer(map) {
 
     const filteredFeatures = _lastStationGeoJSON.features.filter(f => {
       const p = f.properties || {};
+      if(stationScope.mode==='hidden') return false;
+      // Journey stops stay visible even when the general map filters exclude them.
+      if(stationScope.mode==='journey') return stationScope.stationIds.includes(Number(p.id));
       const t = (p.category || p.type || '').toLowerCase();
 
       // Own/Competitors/Targets toggles
@@ -141,14 +160,24 @@ export function StationTargetRenderer(map) {
     const p = feature.properties || {};
 
     // Centralized, brand-aware marker builder
-    const marker = buildStationMarker(latlng, p);
+    const marker = buildStationMarker(snapshotPositions.get(p.id) || latlng, p);
+    if (snapshotMode) {
+      marker.options.draggable = true;
+      marker.on('add', () => marker.dragging.enable());
+      marker.on('dragend', () => {
+        const pos = marker.getLatLng();
+        snapshotPositions.set(p.id, [pos.lat, pos.lng]);
+      });
+    }
 
     marker.on('click', () => {
+      if (snapshotMode) return;
+      if (map._journeyPickStation?.(feature)) return;
       if (map._stationInteraction) {
         if (isDeleteMode()) return map._stationInteraction.delete(p, marker);
         if (isEditMode())   return map._stationInteraction.edit(p, marker);
       }
-      showPopup(marker, p);
+      showPopup(marker, p, feature);
     });
 
     return marker;
@@ -156,7 +185,7 @@ export function StationTargetRenderer(map) {
 
   /* -------------------- Popups + Side Panel -------------------- */
 
-  function showPopup(marker, p) {
+  function showPopup(marker, p, feature) {
     const cat = p.category || p.type || 'station';
     const lines = [];
     lines.push(`<strong>${escapeHtml(p.name || 'Unnamed')}</strong>`);
@@ -165,7 +194,21 @@ export function StationTargetRenderer(map) {
     } else {
       lines.push(`<small>${escapeHtml(cat)}</small>`);
     }
-    marker.bindPopup(lines.join('<br>')).openPopup();
+    const content = document.createElement('div');
+    content.innerHTML = lines.join('<br>');
+    const coordinates = feature.geometry?.coordinates;
+    if (coordinates?.length >= 2 && Number.isFinite(coordinates[0]) && Number.isFinite(coordinates[1]) &&
+        Math.abs(coordinates[0]) <= 180 && Math.abs(coordinates[1]) <= 90) {
+      const navigate = document.createElement('button');
+      navigate.type = 'button'; navigate.className = 'station-navigate'; navigate.textContent = 'Navigate';
+      navigate.onclick = () => {
+        map.closePopup();
+        document.getElementById('side-panel')?.classList.remove('open');
+        map._navigateStation?.({id:p.id,name:p.name,latitude:coordinates[1],longitude:coordinates[0]});
+      };
+      content.appendChild(navigate);
+    }
+    marker.bindPopup(content).openPopup();
 
     // Open side panel with chart
     openSidePanel(p);
@@ -239,6 +282,9 @@ export function StationTargetRenderer(map) {
   /* -------------------- Public API -------------------- */
 
   return {
+    setStationVisibility,
+    getStationVisibility: () => ({...stationScope,stationIds:[...stationScope.stationIds]}),
+    setSnapshotMode,
     loadStations,
     loadTargets,
     refreshAll,

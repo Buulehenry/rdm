@@ -1,0 +1,20 @@
+services:
+  osrm:
+    image: ghcr.io/project-osrm/osrm-backend:v5.27.1@sha256:855614a38f464b0558a2ad6eaa7cb8c139f39887da9b38b485ce453c6e6e6124
+    command: [osrm-routed, --algorithm, mld, --threads, "2", --verbosity, WARNING, --max-viaroute-size, "42", --max-table-size, "42", --max-trip-size, "42", /data/uganda-latest.osrm]
+    volumes:
+      - ./data:/data:ro
+    ports:
+      - "127.0.0.1:5001:5000"
+    restart: unless-stopped
+    mem_limit: 2g
+    cpus: 2
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "2"
