@@ -56,7 +56,7 @@ Trip and Table, journey preview, and mobile location permission/live movement.
 The container health check covers the login page; it does not prove routing or GPS.
 `docker compose exec -T web python - < verify.py` checks private routing and the
 authenticated route API without writing journeys. Adapt seed-specific station
-IDs if deploying a different dataset.
+names if deploying a different dataset.
 
 ## Backups and updates
 

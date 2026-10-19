@@ -9,6 +9,8 @@ with app.app_context():
     admin = User.query.filter_by(role='admin').first()
     assert admin is not None
     admin_id = admin.id
+    expected_stops = [Station.query.filter_by(name=name).one().id for name in
+                      ('Rubis Seeta Fuel Station', 'Rubis Jinja 1 Fuel Station', 'Rubis Bugiri Fuel Station')]
     print('Stations:', Station.query.count())
     print('Users:', ', '.join(f'{u.username} ({u.role})' for u in User.query.order_by(User.id)))
     engine = app.extensions['osrm']
@@ -31,15 +33,15 @@ assert response.status_code == 200, response.get_json()
 assert response.get_json()['route']['distance'] > 0
 spec = dict(name='Read-only deployment check', journey_date=date.today().isoformat(),
             start=points[0], departure_time='08:00', working_end='20:00', optimize=True,
-            stops=[dict(station_id=49, visit_minutes=15), dict(station_id=169, visit_minutes=15), dict(station_id=81, visit_minutes=15)])
+            stops=[dict(station_id=sid, visit_minutes=15) for sid in expected_stops])
 response = client.post('/api/journeys/preview', json=spec, headers=headers, base_url='https://localhost')
 assert response.status_code == 200, response.get_json()
 plan = response.get_json()['plan']
-assert [s['station_id'] for s in plan['stops']] == [49, 169, 81]
+assert [s['station_id'] for s in plan['stops']] == expected_stops, [s['station_id'] for s in plan['stops']]
 print('Journey preview: Seeta -> Jinja -> Bugiri')
 with app.app_context():
     from app import db
-    bugiri = db.session.get(Station, 81)
+    bugiri = db.session.get(Station, expected_stops[-1])
     assert abs(bugiri.latitude - .5728563578377932) < 1e-8
     assert abs(bugiri.longitude - 33.745726880470166) < 1e-8
 print('Authenticated routing API, anonymous protection and Bugiri correction: passed')
